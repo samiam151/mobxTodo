@@ -4,37 +4,17 @@ import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
-class AppState {
-    @observable timer = 0;
+import { TodoList } from "./components/TodoList";
+import { TodoStore } from './models/TodoStore';
 
-    constructor() {
-        setInterval(() => {
-            this.timer += 1;
-        }, 1000);
-    }
+const store = new TodoStore();
+store.addTodo("read MobX tutorial");
+store.addTodo("try MobX");
+store.todos[1].task = "try MobX in own project";
+store.todos[0].task = "grok MobX tutorial";
 
-    resetTimer() {
-        this.timer = 0;
-    }
-}
 
-@observer
-class TimerView extends React.Component<{appState: AppState}, {}> {
-    render() {
-        return (
-            <div>
-                <button onClick={this.onReset}>
-                    Seconds passed: {this.props.appState.timer}
-                </button>
-                <DevTools />
-            </div>
-        );
-     }
-
-     onReset = () => {
-         this.props.appState.resetTimer();
-     }
-};
-
-const appState =  new AppState();
-ReactDOM.render(<TimerView appState={appState} />, document.getElementById('root'));
+ReactDOM.render(
+  <TodoList store={ store } />,
+  document.querySelector("#root")
+);
